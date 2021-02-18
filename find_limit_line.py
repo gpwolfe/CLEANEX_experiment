@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Created on Wed Jan 13 23:12:46 2021
+@author: gpwolfe
 
-@author: piper
+The third value in popt (corresponding to 'c' in the
+function fed to curve_fit) is the upper asympototic limit.
+
+c-a ('a' being the first value in popt) gives the y-intercept,
+which is close to 0 in most cases in these experiments.
+
+'b', the second value in popt, defines the rate of decay of the
+subtracted term 'a'. At first, 'a' is about as large as 'c', but as the
+'x' term grows larger, the function subtracts less and less from 'c',
+with 'b' defining this interaction.
+
+If curve_fit cannot fit the data, check to see if the value at 0 is present,
+and whether that value is inappropriately high.
 """
 from scipy.optimize import curve_fit
 import numpy as np
 import matplotlib.pyplot as plt
-
-# The third value in popt (corresponding to 'c' in the
-# function fed to curve_fit) is the upper asympototic limit.
-
-# c-a ('a' being the first value in popt) gives the y-intercept,
-# which is close to 0 in most cases in these experiments.
-
-# 'b', the second value in popt, defines the rate of decay of the
-# subtracted term 'a'. At first, 'a' is about as large as 'c', but as the
-# 'x' term grows larger, the function subtracts less and less from 'c',
-# with 'b' defining this interaction.
-
 
 def func(x, a, b, c):
     """Function for limit line."""
@@ -28,6 +27,8 @@ def func(x, a, b, c):
 
 def plotty(x_data, y_data, point_name):
     """
+    Plot peak intensity versus millisecond value of NMR data.
+
     Takes a two arrays, one corresponding to delay in milliseconds, the other
     corresponding to the measured peak intensity. Produces a graph with the
     data points, a line of best fit, the upper limit, and the B value, which
@@ -40,8 +41,6 @@ def plotty(x_data, y_data, point_name):
 
     example: plotty(range(0,200))
     """
-
-    # Generating line of fit for experimental data
     popt, pcov = curve_fit(func, x_data, y_data,
                            p0=[max(y_data), .02, max(y_data)])
 
