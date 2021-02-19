@@ -35,11 +35,21 @@ def plotty(x_data, y_data, point_name):
     corresponds to the rate of deceleration of the rate of increase (that is,
     how quickly the line of fit bends to horizontal).
 
-    line_x: 2D array-like, matches length of y_data
-    line_y: 2D array-like, matches length of x_data
-    point_name: String, plot title and file name, e.g. "Arginine_298K_azara"
+    Graph saves as a .png image using string passed as point_name as file name.
 
-    example: plotty(range(0,200))
+    Parameters
+    ----------
+    x_data : array
+        Array or list with millisecond values for x axis.
+    y_data : array
+        Array or list of peak intensity values.
+    point_name : string
+        Name used for output file and plot title.
+
+    Returns
+    -------
+    None.
+
     """
     popt, pcov = curve_fit(func, x_data, y_data,
                            p0=[max(y_data), .02, max(y_data)])
