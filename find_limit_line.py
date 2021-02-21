@@ -20,7 +20,7 @@ from scipy.optimize import curve_fit
 import numpy as np
 import matplotlib.pyplot as plt
 
-def func(x, a, b, c):
+def limit_func(x, a, b, c):
     """Function for limit line."""
     return c-(a * np.exp(-b*x))
 
@@ -35,7 +35,7 @@ def plotty(x_data, y_data, point_name):
     corresponds to the rate of deceleration of the rate of increase (that is,
     how quickly the line of fit bends to horizontal).
 
-    Graph saves as a .png image using string passed as point_name as file name.
+    Graph saves as a .pdf image using string passed as point_name as file name.
 
     Parameters
     ----------
@@ -51,27 +51,29 @@ def plotty(x_data, y_data, point_name):
     None.
 
     """
-    popt, pcov = curve_fit(func, x_data, y_data,
-                           p0=[max(y_data), .02, max(y_data)])
+    try:
+        popt, pcov = curve_fit(limit_func, x_data, y_data,
+                               p0=[max(y_data), .02, max(y_data)])
+        # Points for line of fit
+        line_x = np.linspace(0, max(x_data))
+        line_y = [limit_func(j, *popt) for j in line_x]
 
-    # Points for line of fit
-    line_x = np.linspace(0, max(x_data))
-    line_y = [func(j, *popt) for j in line_x]
+        # Plotting experimental data
+        plt.scatter(x_data, y_data, marker='o', color='xkcd:royal blue')
+        # Plotting line of fit
+        plt.plot(line_x, line_y, color='xkcd:deep blue')
+        # Plotting line of upper limit
+        plt.plot(line_x, [popt[2] for i in line_x], color='xkcd:light blue',
+                 alpha=.5)
+        plt.title(point_name)
+        plt.xlabel('delay (milliseconds')
+        plt.ylabel('intensity')
+        plt.text(max(x_data), line_y[0], horizontalalignment='right',
+                 s="B = {:.4f}".format(popt[1]), weight='bold')
+        plt.savefig(point_name + '.pdf')
 
-    # Plotting experimental data
-    plt.scatter(x_data, y_data, marker='o', color='xkcd:royal blue')
-    # Plotting line of fit
-    plt.plot(line_x, line_y, color='xkcd:deep blue')
-    # Plotting line of upper limit
-    plt.plot(line_x, [popt[2] for i in line_x], color='xkcd:light blue',
-             alpha=.5)
-    plt.title(point_name)
-    plt.xlabel('delay (milliseconds')
-    plt.ylabel('intensity')
-    plt.text(x=0, y=popt[2], s="{:.4f}".format(popt[2]))
-    plt.text(x=10, y=0, s="y-intercept: {:.4f}".format(popt[0]-popt[2]))
-    plt.text(max(x_data), 0, horizontalalignment='right',
-             s="C - A * exp(-{:.4f} * x)".format(popt[1]), weight='bold')
-    plt.savefig(point_name + '.png')
+        plt.clf()
 
-    plt.clf()
+    except RuntimeError:
+        print(f'RuntimeError: Could not find limit for {point_name}')
+        pass
