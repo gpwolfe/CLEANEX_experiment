@@ -35,45 +35,50 @@ def limit_data(directory):
     df : pandas.DataFrame
         Dataframe containing peak intensity values to be plotted, indexed by
         time in milliseconds (index) and peak name (columns).
-    errors : pandas.DataFrame
+    error_df : pandas.DataFrame
         Dataframe containing values for setting errorbars on plot.
 
     """
     dfs = []
     errors = []
+    FILENAME_RE = re.compile(
+        r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
 
-    for file in os.listdir(directory):
-        path = os.path.join(directory, file)
+    for fn in os.listdir(directory):
+        print(1)
+        match = FILENAME_RE.match(fn)
+        if not match:
+            print('no match')
+            continue
 
-        if (not file.startswith('.') and not file.endswith('B')
-                and not file.endswith('control')):
-            time = int(re.findall(r'\d+', file.split('_')[-1])[0])
-            data = pd.read_table(path)[['Assign F1', 'Height']]
-            data.columns = ["point", time]
-            data = (data.T)
-            data.columns = [x.strip() for x in data.loc['point']]
-            data = data.drop('point')
-            dfs.append(data)
+        is_err = match.group('error')
+        is_control = match.group('control')
+        time_str = match.group('time')
+        if time_str:
+            print('time_str {}'.format(time_str))
+            time_int = int(time_str)
 
-        if file.endswith('control'):
-            control = pd.read_table(path)[['Assign F1', 'Height']]
-            control.columns = ["point", 'control']
-            control = (control.T)
-            control.columns = [x.strip() for x in control.loc['point']]
-            control = control.drop('point').astype('float')
+        path = os.path.join(directory, fn)
+        data = pd.read_table(path)[['Assign F1', 'Height']]
+        data.index = [x.strip() for x in data['Assign F1']]
+        data.drop('Assign F1', axis=1, inplace=True)
 
-        if file.endswith('B'):
-            time = int(re.findall(r'\d+', file.split('_')[-1])[0])
-            error = pd.read_table(path)[['Assign F1', 'Height']]
-            error.columns = ['point', time]
-            error = error.T
-            error.columns = [x.strip() for x in error.loc['point']]
-            error = error.drop('point')
-            errors.append(error)
+        if is_control:
+            control = data.astype('float')
+        elif time_str:
+            data.columns = [time_int]
+            if is_err:
+                errors.append(data)
+            else:
+                dfs.append(data)
+        else:
+            print(f'{fn} not processed.')
+            continue
 
-    df = (pd.concat(dfs).astype('float').divide(control.iloc[0])
-          .reset_index(drop=False).rename(columns={'index': 'time'}))
-    errors = (pd.concat(errors).astype('float').divide(control.iloc[0])
-              .reset_index(drop=False).rename(columns={'index': 'time'}))
+    df = (pd.concat(dfs, axis=1).astype('float')
+          .divide(control.iloc[:, 0], axis=0).T)
+    df = df.append(pd.Series(0, index=df.columns, name=0))
+    error_df = (pd.concat(errors, axis=1).astype('float')
+                .divide(control.iloc[:, 0], axis=0))
 
-    return df, errors
+    return df, error_df

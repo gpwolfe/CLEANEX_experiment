@@ -63,12 +63,10 @@ def plotty(x_data, y_data, point_name):
         # Plotting line of fit
         plt.plot(line_x, line_y, color='xkcd:deep blue')
         # Plotting line of upper limit
-        plt.plot(line_x, [popt[2] for i in line_x], color='xkcd:light blue',
-                 alpha=.5)
         plt.title(point_name)
         plt.xlabel('delay (milliseconds')
         plt.ylabel('intensity')
-        plt.text(max(x_data), line_y[0], horizontalalignment='right',
+        plt.text(max(x_data), min(y_data), horizontalalignment='right',
                  s="B = {:.4f}".format(popt[1]), weight='bold')
         plt.savefig(point_name + '.pdf')
 

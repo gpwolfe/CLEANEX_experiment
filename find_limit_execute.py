@@ -43,7 +43,7 @@ def execute_limit(directory):
 
     """
     data, errors = limit_data(directory)
-    xs = data['time']
+    xs = data.index
 
     for point in data.columns[1:]:
         plotty(xs, data[point], point)
