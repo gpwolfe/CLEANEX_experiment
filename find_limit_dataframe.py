@@ -45,17 +45,14 @@ def limit_data(directory):
         r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
 
     for fn in os.listdir(directory):
-        print(1)
         match = FILENAME_RE.match(fn)
         if not match:
-            print('no match')
             continue
 
         is_err = match.group('error')
         is_control = match.group('control')
         time_str = match.group('time')
         if time_str:
-            print('time_str {}'.format(time_str))
             time_int = int(time_str)
 
         path = os.path.join(directory, fn)
