@@ -16,9 +16,11 @@ with 'b' defining this interaction.
 If curve_fit cannot fit the data, check to see if the value at 0 is present,
 and whether that value is inappropriately high.
 """
-from scipy.optimize import curve_fit
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
 
 def limit_func(x, a, b, c):
     """Function for limit line."""
@@ -54,20 +56,22 @@ def plotty(x_data, y_data, point_name):
     try:
         popt, pcov = curve_fit(limit_func, x_data, y_data,
                                p0=[max(y_data), .02, max(y_data)])
-        # Points for line of fit
         line_x = np.linspace(0, max(x_data))
         line_y = [limit_func(j, *popt) for j in line_x]
+        y_pred = [limit_func(i, *popt) for i in x_data]
+        std_dev = np.std(y_data)
+        mse = mean_squared_error(y_data, y_pred)
+        mae = mean_absolute_error(y_data, y_pred)
 
-        # Plotting experimental data
-        plt.scatter(x_data, y_data, marker='o', color='xkcd:royal blue')
-        # Plotting line of fit
-        plt.plot(line_x, line_y, color='xkcd:deep blue')
-        # Plotting line of upper limit
+        plt.scatter(x_data, y_data, marker='o', color='black')
+        plt.plot(line_x, line_y, color='#377eb8', lw=3)
         plt.title(point_name)
-        plt.xlabel('delay (milliseconds')
+        plt.xlabel('delay (milliseconds)')
         plt.ylabel('intensity')
-        plt.text(max(x_data), min(y_data), horizontalalignment='right',
-                 s="B = {:.4f}".format(popt[1]), weight='bold')
+        plt.text(max(x_data), min(line_y), horizontalalignment='right',
+                 verticalalignment='bottom',
+                 s="B = {:.6f}\nST DEV = {:.6f}\nMSE = {:.6f}\nMAE = {:.6f}"
+                 .format(popt[1], std_dev, mse, mae), weight='bold')
         plt.savefig(point_name + '.pdf')
 
         plt.clf()

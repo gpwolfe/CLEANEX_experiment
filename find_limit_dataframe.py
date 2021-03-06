@@ -8,6 +8,8 @@ import os
 import pandas as pd
 import re
 
+FILENAME_RE = re.compile(
+        r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
 
 def limit_data(directory):
     """
@@ -41,8 +43,6 @@ def limit_data(directory):
     """
     dfs = []
     errors = []
-    FILENAME_RE = re.compile(
-        r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
 
     for fn in os.listdir(directory):
         match = FILENAME_RE.match(fn)

@@ -49,7 +49,7 @@ def execute_limit(directory):
         plotty(xs, data[point], point)
 
 
-def main(argv):
+def cleanex_plot(argv):
     """
     Run data file reading and plotting from command line.
 
@@ -64,7 +64,7 @@ def main(argv):
 
     """
     parser = ArgumentParser(description="Plot line of fit for CLEANEX data.")
-    parser.add_argument('directory', metavar="DIRECTORY",
+    parser.add_argument('directory', metavar="DIR",
                         help="data directory")
     args = parser.parse_args(argv)
     directory = args.directory
@@ -72,4 +72,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    cleanex_plot(sys.argv[1:])
