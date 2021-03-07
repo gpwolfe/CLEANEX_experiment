@@ -3,7 +3,20 @@
 
 Read data files and return data for plotting by find_limit_line.py. Executed
 by find_limit_execute.py
+
+File naming should follow the following conventions:
+
+Data to be plotted: protein_temperature_80ms
+(where 80ms is replaced by the appropriate time in milliseconds with "ms"
+appended)
+
+Control data: protein_temperature_control
+
+Error data (currently not implemented on plot): protein_temperature_80msB
+(where 80msB is replaced by the appropriate time in milliseconds with "msB"
+appended)
 """
+
 import os
 import pandas as pd
 import re
@@ -11,18 +24,10 @@ import re
 FILENAME_RE = re.compile(
         r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
 
+
 def limit_data(directory):
     """
     Read data files from directory and return dataframe of values to plot.
-
-    File naming should follow the following conventions:
-    Data to be plotted: protein_temperature_80ms
-    (where 80 is replaced by the appropriate time in milliseconds with "ms"
-    appended)
-    Control data: protein_temperature_control
-    Error data (currently not implemented): protein_temperature_80msB
-    (where 80 is replaced by the appropriate time in milliseconds with "msB"
-    appended)
 
     Example:
         data, errors = limit_data(my_data_directory)
@@ -39,7 +44,6 @@ def limit_data(directory):
         time in milliseconds (index) and peak name (columns).
     error_df : pandas.DataFrame
         Dataframe containing values for setting errorbars on plot.
-
     """
     dfs = []
     errors = []

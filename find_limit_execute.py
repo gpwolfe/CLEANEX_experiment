@@ -1,8 +1,6 @@
 """
 @author: gpwolfe
 
-Execute find_limit_dataframe.py and find_limit_line.py.
-
 Plot data from a series of files. Each file represents intensity data from a
 series of peaks for a single time value. For example, one file might include
 intensity data for twelve peaks for time = 20 milliseconds.
@@ -11,14 +9,15 @@ Column name should correspond to peak name; plot title will be based on this.
 File naming should follow the following conventions:
 
 Data to be plotted: protein_temperature_80ms
-    (where 80 is replaced by the appropriate time in milliseconds with "ms"
+    (where 80ms is replaced by the appropriate time in milliseconds with "ms"
      appended)
 Control data: protein_temperature_control
 Error data (currently not implemented): protein_temperature_80msB
-    (where 80 is replaced by the appropriate time in milliseconds with "msB"
+    (where 80msB is replaced by the appropriate time in milliseconds with "msB"
      appended)
 
 """
+
 from argparse import ArgumentParser
 import sys
 
