@@ -17,11 +17,11 @@ If curve_fit cannot fit the data, check to see if the value at 0 is present,
 and whether that value is inappropriately high.
 """
 
+import sys
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-import sys
-
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
 

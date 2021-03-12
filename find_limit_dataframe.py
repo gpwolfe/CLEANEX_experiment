@@ -18,8 +18,9 @@ appended)
 """
 
 import os
-import pandas as pd
 import re
+
+import pandas as pd
 
 FILENAME_RE = re.compile(
         r'\A\S+_((?P<time>\d+)ms(?P<error>B)?|(?P<control>control))\Z')
