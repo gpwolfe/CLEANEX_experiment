@@ -15,7 +15,6 @@ Control data: protein_temperature_control
 Error data (currently not implemented): protein_temperature_80msB
     (where 80msB is replaced by the appropriate time in milliseconds with "msB"
      appended)
-
 """
 
 from argparse import ArgumentParser
