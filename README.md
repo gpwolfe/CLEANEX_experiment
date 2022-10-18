@@ -41,10 +41,10 @@ The fitted line should resemble a curve starting near zero, approaching some y-v
 
 Text on the plot includes:
 
-The value for B, which moderates the rate of increase as the line of fit approaches some upper limit
+- The value for B, which moderates the rate of increase as the line of fit approaches some upper limit
 
-Mean squared error (MSE) of line of fit
+- Mean squared error (MSE) of line of fit
 
-Mean absolute error (MAE) of line of fit (typically more useful than MSE here, as squared values below 1 result in very small MSE)
+- Mean absolute error (MAE) of line of fit
 
 Plots will be saved in .pdf format to current working directory.
