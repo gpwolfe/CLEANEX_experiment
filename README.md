@@ -2,6 +2,8 @@
 Plotting RNA data from NMR experiments analyzed using [CcpNmr](www.ccpn.ac.uk) with line fitting based on millisecond time scale and collected peak 
 intensity values.
 
+Used in Jones et al., [Modulation of pre-mRNA structure by hnRNP proteins regulates alternative splicing of MALT1](https://doi.org/10.1126/sciadv.abp9153)
+
 ## Requirements
 Python 3 (created using Python 3.8)
 
